@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forgot Password | AlkanSave</title>
+  <link rel="icon" type="image/png" href="/AlkanSave/1_Presentation/images/logo.svg">
+  <link rel="stylesheet" href="/AlkanSave/1_Presentation/css/forgotpass.css" />
+</head>
+<body>
+  <div class="login-container">
+    <div class="left-section">
+      <img src="/AlkanSave/1_Presentation/images/logo.svg" alt="AlkanSave Logo" class="logo-img" />
+      <h1 class="brand-title">
+        <span class="text-alkan">Alkan</span><span class="text-save">Save</span>
+      </h1>
+      <h2 class="welcome-title"><span class="text-alkan">FORGOT</span> <span class="text-save">PASSWORD</span></h2>
+      <p class="subtagline">Don't worry, we got you!</p>
+    </div>
+
+    <div class="right-section">
+      <a href="/AlkanSave/1_Presentation/login.html" class="back-btn">
+        <span class="arrow">&#8592;</span> Back
+      </a>
+
+      <div class="form-wrapper">
+        <h2 class="form-title">Reset Password</h2>
+        <p class="form-subtitle">Enter your email to receive a reset code</p>
+
+        <!-- Step 1: Email Input -->
+        <form method="POST" action="/AlkanSave/2_Application/controllers/PasswordController.php" class="login-form" id="emailForm">
+          <input type="email" name="email" placeholder="Email Address" class="input-field" required />
+          <button type="submit" class="login-btn">Send Code</button>
+        </form>
+
+        <!-- Step 2: Code and New Password (initially hidden) -->
+        <form method="POST" action="/AlkanSave/2_Application/controllers/PasswordController.php" class="login-form" id="resetForm" style="display: none;">
+          <input type="hidden" name="email" id="resetEmail">
+          <input type="text" name="code" placeholder="Verification Code" class="input-field" required />
+          <input type="password" name="password" placeholder="New Password" class="input-field" required />
+          <input type="password" name="confirm_password" placeholder="Confirm Password" class="input-field" required />
+          <button type="submit" class="login-btn">Reset Password</button>
+        </form>
+
+        <?php if (isset($_GET['test_mode'])): ?>
+        <div class="test-notice">
+            TEST MODE: Check XAMPP error logs for verification code
+        </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error'])): ?>
+          <div class="error-message">
+            <?php
+            switch ($_GET['error']) {
+                case 'invalid_email': echo 'Email not found'; break;
+                case 'invalid_code': echo 'Invalid verification code'; break;
+                case 'update_failed': echo 'Failed to update password'; break;
+                case 'email_failed': echo 'Failed to send email. Please try again.'; break;
+                default: echo 'An error occurred';
+            }
+            ?>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Handle email submission and show reset form
+    if (window.location.search.includes('email=')) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+      
+      document.getElementById('emailForm').style.display = 'none';
+      document.getElementById('resetForm').style.display = 'block';
+      document.getElementById('resetEmail').value = email;
+    }
+
+    // Client-side password match validation
+    document.getElementById('resetForm').addEventListener('submit', function(e) {
+      const password = e.target.password.value;
+      const confirm = e.target.confirm_password.value;
+      
+      if (password !== confirm) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+      }
+    });
+  </script>
+
+  <style>
+    .error-message {
+      color: #ff4444;
+      text-align: center;
+      margin-top: 15px;
+    }
+    
+    .test-notice {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+      margin: 15px 0;
+      border: 1px solid #ffeeba;
+    }
+  </style>
+</body>
+</html>

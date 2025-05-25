@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlkanSave - Reports</title>
+  <link rel="icon" href="images/logo.svg" type="image/x-icon">
+  <link rel="stylesheet" href="css/sharedLayout.css" />
+  <link rel="stylesheet" href="css/user_reports.css" />
+  <link rel="stylesheet" href="css/logout.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Additional styles for dynamic elements */
+    .progress-container {
+      margin-top: 8px;
+    }
+    .progress-bar {
+      height: 6px;
+      background-color: #f0f0f0;
+      border-radius: 3px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background-color: #fa8fbc;
+      transition: width 0.5s ease;
+    }
+    .percentage {
+      font-size: 12px;
+      color: #666;
+      display: block;
+      text-align: right;
+      margin-top: 3px;
+    }
+    .category-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .active-month {
+      background-color: #24336e !important;
+      color: white !important;
+    }
+    #error-message {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 15px;
+      background: #ffebee;
+      color: #c62828;
+      border-radius: 4px;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="images/logo.svg" alt="AlkanSave Logo"/>
+      <h2><span class="alkan">Alkan</span><span class="save">Save</span></h2>
+    </div>
+    <nav>
+      <a href="user_home.html"><img src="images/home_icon.svg" alt="Home">Home</a>
+      <a href="user_savings.html"><img src="images/savings_icon.svg" alt="Savings & Goals">Savings & Goals</a>
+      <a href="user_transaction.html"><img src="images/transaction_icon.svg" alt="Transaction">Transaction</a>
+      <a href="user_reports.html" class="active"><img src="images/reports_icon.svg" alt="Category">Reports</a>
+      <a href="user_profile.html"><img src="images/profile_icon.svg" alt="Profile">Profile</a>
+    </nav>
+    <a href="landing.html" class="logout" id="logoutButton">
+      <img src="images/logout_icon.svg" alt="Logout">Log Out
+    </a>
+  </div>
+
+  <div class="main-content">
+    <h1 class="title1">Reports</h1>
+    
+    <!-- Reports Dashboard -->
+    <div class="top-section">
+      <div class="achievements">
+        <h2 class="section-title">Savings Growth Over Time</h2>
+        <div class="chart-container">
+          <canvas id="savingsGrowthChart"></canvas>
+        </div>
+      </div>
+      
+      <div class="top-categories">
+        <h2 class="section-title">
+          Goal Completion Ratio 
+          <span id="completion-rate" style="color:#24336e; font-size:18px"></span>
+        </h2>
+        <div class="chart-container">
+          <canvas id="goalCompletionChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="completed-goals-title">Completed <span style="color: #fa8fbc;">Goals</span></h2>
+  
+    <section class="transaction-card">
+      <div class="calendar-wrapper">
+        <div class="month-card" data-month="January">January</div>
+        <div class="month-card" data-month="February">February</div>
+        <div class="month-card" data-month="March">March</div>
+        <div class="month-card" data-month="April">April</div>
+        <div class="month-card" data-month="May">May</div>
+        <div class="month-card" data-month="June">June</div>
+        <div class="month-card" data-month="July">July</div>
+        <div class="month-card" data-month="August">August</div>
+        <div class="month-card" data-month="September">September</div>
+        <div class="month-card" data-month="October">October</div>
+        <div class="month-card" data-month="November">November</div>
+        <div class="month-card" data-month="December">December</div>
+      </div>
+      <div class="transaction-table">
+        <div class="scrollable-tbody">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Goal</th>
+                <th>Amount Saved</th>
+                <th>Target Amount</th>
+              </tr>
+            </thead>
+            <tbody id="completed-goals-body">
+              <!-- Dynamic content will be inserted here by JavaScript -->
+              <tr class="loading-placeholder">
+                <td colspan="5" style="text-align: center;">
+                  Loading completed goals...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="logoutModal" class="logout-modal">
+    <div class="modal-content">
+      <h3>Are you sure you want to log out?</h3>
+      <div class="modal-buttons">
+        <button id="confirmLogout" class="confirm-btn">Yes</button>
+        <button id="cancelLogout" class="cancel-btn">No</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="error-message"></div>
+
+  <script>
+    // Remove old script references and use this single optimized version
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize logout functionality
+      document.getElementById('logoutButton').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('logoutModal').style.display = 'block';
+      });
+
+      document.getElementById('confirmLogout').addEventListener('click', function() {
+        window.location.href = 'landing.html';
+      });
+
+      document.getElementById('cancelLogout').addEventListener('click', function() {
+        document.getElementById('logoutModal').style.display = 'none';
+      });
+
+      // Main reports functionality is in the external JS
+    });
+  </script>
+
+  <!-- Main reports JavaScript -->
+  <script src="js/user_reports.js?v=<?= time() ?>"></script>
+</body>
+</html>
