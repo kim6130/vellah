@@ -1,81 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AlkanSave - Profile</title>
-  <link rel="icon" href="images/logo.svg" type="image/x-icon">
-  <link rel="stylesheet" href="css/sharedLayout.css" />
-  <link rel="stylesheet" href="css/user_profile.css" />
-  <link rel="stylesheet" href="css/logout.css" />
-  <style>
-    .loading {
-      padding: 20px;
-      text-align: center;
-      font-size: 18px;
-      color: #555;
+document.addEventListener('DOMContentLoaded', async () => {
+    // Show loading state
+    const profileContainer = document.getElementById('profile-container');
+    profileContainer.innerHTML = '<div class="loading">Loading profile...</div>';
+    
+    try {
+        const response = await fetch('http://localhost/AlkanSave/2_Application/controllers/ProfileController.php', {
+            method: 'GET',
+            credentials: 'include' // Required for session cookies
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            // Update the profile page with actual data
+            profileContainer.innerHTML = `
+                <div class="profile-pic-section">
+                    <div class="profile-pic-box">
+                        <img id="profilePreview" src="${result.data.avatar || 'images/profile.svg'}" alt="Profile Picture" />
+                        <div class="hover-overlay"></div>
+                    </div>
+                    <p class="subtagline">Certified AlkanSaver</p>
+                </div>
+                <div class="profile-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Last Name</label>
+                            <p>${result.data.last_name || 'Not set'}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>First Name</label>
+                            <p>${result.data.first_name || 'Not set'}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Date of Birth</label>
+                            <p>${result.data.dob || 'Not set'}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Email Address</label>
+                            <p>${result.data.email || 'Not set'}</p>
+                        </div>
+                        <div class="info-item button-cell">
+                            <a href="user_edit_profile.html" class="edit-profile-btn">Edit Profile</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            throw new Error(result.message || 'Failed to load profile data');
+        }
+    } catch (error) {
+        console.error('Profile load error:', error);
+        profileContainer.innerHTML = `
+            <div class="error-message">
+                <p>⚠️ Error loading profile</p>
+                <p>${error.message}</p>
+                ${error.message.includes('Unauthorized') ? 
+                    '<a href="login.html" class="retry-button">Please login</a>' : 
+                    '<button onclick="location.reload()" class="retry-button">Try Again</button>'
+                }
+            </div>
+        `;
     }
-    .error-message {
-      padding: 20px;
-      text-align: center;
-      color: #d9534f;
-    }
-    .retry-button {
-      margin-top: 15px;
-      padding: 8px 20px;
-      background: #5bc0de;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div class="sidebar">
-    <div class="logo">
-      <img src="images/logo.svg" alt="AlkanSave Logo" />
-      <h2><span class="alkan">Alkan</span><span class="save">Save</span></h2>
-    </div>
-    <nav>
-      <a href="user_home.html"><img src="images/home_icon.svg" alt="Home">Home</a>
-      <a href="user_savings.html"><img src="images/savings_icon.svg" alt="Savings & Goals">Savings & Goals</a>
-      <a href="user_transaction.html"><img src="images/transaction_icon.svg" alt="Transaction">Transaction</a>
-      <a href="user_reports.html"><img src="images/reports_icon.svg" alt="Reports">Reports</a>
-      <a href="user_profile.html" class="active"><img src="images/profile_icon.svg" alt="Profile">Profile</a>
-    </nav>
-    <a href="landing.html" class="logout" id="logoutButton">
-      <img src="images/logout_icon.svg" alt="Logout">Log Out
-    </a>
-  </div>
-
-  <div class="main-content">
-    <div class="datetime-container">
-      <div class="date-box" id="dateBox" data-label="DATE"></div>
-      <div class="time-box" id="timeBox" data-label="TIME"></div>
-    </div>
-  
-    <div class="profile-wrapper">
-      <h1 class="title1">My <span class="highlight-name">Profile</span></h1>
-  
-      <section class="transaction-card">
-        <div id="profile-container" class="profile-container">
-          <!-- Content will be loaded dynamically by profile.js -->
-        </div>
-      </section>
-    </div>
-
-    <div id="logoutModal" class="logout-modal">
-      <div class="modal-content">
-        <h3>Are you sure you want to log out?</h3>
-        <div class="modal-buttons">
-          <button id="confirmLogout" class="confirm-btn">Yes</button>
-          <button id="cancelLogout" class="cancel-btn">No</button>
-        </div>
-      </div>
-    </div>
-  
-    <script src="js/dateLinksLogout.js"></script>
-    <script src="js/user_profile.js"></script>
-  </body>
-</html>
+});
