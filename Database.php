@@ -9,10 +9,12 @@ class Database {
     public static function getInstance() {
         if (!self::$instance) {
             try {
+                error_log("Attempting to connect to database");
+                
                 self::$instance = new PDO(
                     "mysql:host=localhost;dbname=alkansave;charset=utf8mb4",
                     "root",
-                    "", // Empty password for XAMPP default
+                    "",
                     [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
@@ -38,5 +40,12 @@ class Database {
             exit;
         }
     }
+    
+    public function query($query) {
+        return self::$instance->query($query);
+    }
+    
+    public function prepare($statement) {
+        return self::$instance->prepare($statement);
+    }
 }
-?>
