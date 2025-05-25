@@ -12,7 +12,7 @@ class UserRepository {
         try {
             $stmt = $this->db->prepare("SELECT * FROM User WHERE Email = ?");
             $stmt->execute([$email]);
-            return $stmt->fetch();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Database error in findByEmail: " . $e->getMessage());
             return false;
@@ -55,6 +55,7 @@ class UserRepository {
                     DOB, 
                     Email, 
                     ProfilePicture,
+                    PasswordHash,
                     Role,
                     AccountStatus
                 FROM User 
@@ -63,14 +64,7 @@ class UserRepository {
                 LIMIT 1
             ");
             $stmt->execute([$userId]);
-            $profile = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$profile) {
-                error_log("Profile not found for UserID: " . $userId);
-                return false;
-            }
-
-            return $profile;
+            return $stmt->fetch(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
             error_log("Database error in getUserProfile: " . $e->getMessage());
@@ -80,21 +74,41 @@ class UserRepository {
 
     public function updateProfile($userId, $data) {
         try {
-            $stmt = $this->db->prepare("
-                UPDATE User SET
-                    FirstName = ?,
-                    LastName = ?,
-                    DOB = ?,
-                    UpdatedAt = CURRENT_TIMESTAMP
-                WHERE UserID = ?
-            ");
+            $query = "UPDATE User SET 
+                     FirstName = :first_name,
+                     LastName = :last_name,
+                     Email = :email,
+                     DOB = :dob,
+                     UpdatedAt = CURRENT_TIMESTAMP";
+            
+            $params = [
+                ':first_name' => $data['first_name'],
+                ':last_name' => $data['last_name'],
+                ':email' => $data['email'],
+                ':dob' => $data['dob'],
+                ':user_id' => $userId
+            ];
 
-            return $stmt->execute([
-                $data['first_name'],
-                $data['last_name'],
-                $data['dob'],
-                $userId
-            ]);
+            if (isset($data['password'])) {
+                $query .= ", PasswordHash = :password";
+                $params[':password'] = $data['password'];
+            }
+
+            if (isset($data['profile_picture'])) {
+                $query .= ", ProfilePicture = :profile_picture";
+                $params[':profile_picture'] = $data['profile_picture'];
+                error_log("Updating profile picture for user $userId");
+            }
+
+            $query .= " WHERE UserID = :user_id";
+
+            $stmt = $this->db->prepare($query);
+            $success = $stmt->execute($params);
+            
+            if (!$success) {
+                error_log("Update failed: " . implode(", ", $stmt->errorInfo()));
+            }
+            return $success;
 
         } catch (PDOException $e) {
             error_log("Database error in updateProfile: " . $e->getMessage());
@@ -111,10 +125,28 @@ class UserRepository {
                 WHERE UserID = ?
             ");
 
-            return $stmt->execute([$imagePath, $userId]);
+            $success = $stmt->execute([$imagePath, $userId]);
+            
+            if (!$success) {
+                error_log("Profile picture update failed: " . implode(", ", $stmt->errorInfo()));
+            }
+            return $success;
 
         } catch (PDOException $e) {
             error_log("Database error in updateProfilePicture: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function verifyCurrentPassword($userId, $password) {
+        try {
+            $user = $this->getUserProfile($userId);
+            if (!$user || !isset($user['PasswordHash'])) {
+                return false;
+            }
+            return password_verify($password, $user['PasswordHash']);
+        } catch (PDOException $e) {
+            error_log("Database error in verifyCurrentPassword: " . $e->getMessage());
             return false;
         }
     }
