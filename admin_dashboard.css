@@ -1,0 +1,225 @@
+.home-content {
+    padding: 10px;
+    margin-top: 5px;
+  }
+  
+  .welcome {
+    font-size: 46px;
+    color: #24336e;
+  }
+  
+  .highlight-name {
+    color: #f07eae;
+  }
+  
+  .daily-quote {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #24336e;
+    margin-top: 1px;
+    margin-bottom: 35px;
+    text-align: left;
+  }
+  
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+  }
+  
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .total-saved-box {
+    flex: 1;
+    background-color: #fff3f8;
+    padding: 0.5rem;
+    border: 2px solid #f5abc0;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .total-saved-box h3 {
+    font-size: 1rem;
+    color: #9f2584;
+    margin-bottom: 0.5rem;
+  }
+  
+  .total-saved-box p {
+    font-size: 2rem;
+    font-weight: 500;
+    color: #f07eae;
+  }
+  
+  .progress-ring {
+    flex: 1;
+    position: relative;
+    width: 120px;
+    height: 140px;
+    text-align: center;
+  }
+  
+  .progress-ring__svg {
+    transform: rotate(-90deg);
+  }
+  
+  .progress-ring__circle-bg {
+    fill: #ffd6e7;
+    stroke: #f4a2c4;
+    stroke-width: 20;
+  }
+  
+  .progress-ring__circle {
+    fill: none;
+    stroke: #24336e;
+    stroke-width: 10;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 314;
+    transition: stroke-dashoffset 1s ease-out;
+  }
+  
+  .progress-text {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;
+    font-size: 20px;
+    font-weight: bold;
+    color: #24336e;
+  }
+  
+  .label {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #24336e;
+  }
+  
+  .add-savings-box {
+    flex: 1;
+    background-color: transparent;
+    border: transparent;
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    color: #24336e;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  
+  .total-saved-box, .add-goal-btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .total-saved-box:hover, .add-goal-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .plus-icon {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #f07eae;
+  }
+  
+  .calendar h3 {
+    color: #9f2584;
+  }
+  
+  .calendar, .goals-deadline {
+    margin-top: 20px;
+    background: #fff3f8;
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #f5abc0;
+    text-align: center;
+  }
+  
+  .calendar table {
+    width: 100%;
+    margin-top: 10px;
+    border-spacing: 10px;
+    font-weight: 600;
+    color: #f07eae;
+  }
+  
+  .calendar td {
+    padding: 5px;
+    border-radius: 50%;
+    color: #24336e;
+  }
+  
+  .calendar .today {
+    background: #f07eae;
+    color: white;
+  }
+  
+  .goals-deadline h3 {
+    color: #9f2584;
+    margin-bottom: 15px;
+  }
+  
+  
+  .goal-entry {
+    display: flex;
+    justify-content: space-between;
+    background: #ffb8dd;
+    padding: 8px 15px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    color: #24336e;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .goal-entry:hover {
+    background-color: #f398b8;
+    animation: wiggle 0.4s ease;
+  }
+  
+  @keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    50% { transform: rotate(-1deg); }
+    75% { transform: rotate(1deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  .add-goal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;;
+    background-color: #be93c7;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 100px;
+    width: 230px;
+    height: 40px;
+    margin-left: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+    
+    .add-goal-btn:hover {
+    background-color: #fa8fbc;
+    }
+    
+    .add-goal-btn img {
+    width: 20px;
+    height: 20px;
+    }

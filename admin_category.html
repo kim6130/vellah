@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlkanSave</title>
+  <link rel="icon" href="images/logo.svg" type="image/x-icon">
+  <link rel="stylesheet" href="css/sharedLayout.css" />
+  <link rel="stylesheet" href="css/admin_category.css" />
+  <link rel="stylesheet" href="css/logout.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="images/logo.svg" alt="AlkanSave Logo"/>
+      <h2><span class="alkan">Alkan</span><span class="save">Save</span></h2>
+    </div>
+    <nav>
+        <a href="admin_dashboard.html" class="active"><img src="images/analytics_icon.svg" alt="Home">Analytics Dashboard</a>
+        <a href="admin_userM.html" id="userManagementLink"><img src="images/profile_icon.svg" alt="Savings & Goals">User Management</a>
+        <a href="admin_category.html"><img src="images/category_icon.svg" alt="Transaction">Category Management</a>
+        <a href="admin_actlog.html"><img src="images/activity_icon.svg" alt="Category">Activity Logs</a>
+    </nav>
+    <a href="landing.html" class="logout" id="logoutButton">
+      <img src="images/logout_icon.svg" alt="Logout">Log Out
+    </a>
+  </div> 
+
+  <div class="main-content">
+    <h1 class="title1">Category <span class="highlight-name">Management</span></h1>
+    <br>
+   
+    <div id="searchResults" class="search-results hidden"></div>
+
+    <section class="title-content">
+      <div class="card-layout">
+        <div class="left-column">
+          <div class="category small-card">
+            <p>Most Used Category</p>
+            <h3>Travel</h3>
+          </div>
+          <div class="category small-card">
+            <p>Least Used Category</p>
+            <h3>Bills</h3>
+          </div>
+        </div>
+    
+        <div class="right-column">
+          <div class="goals-deadline large-card">
+            <div class="title-wrapper">
+              <div class="title-center">
+                  <span class="user">Add New </span>
+                  <span class="details"> Category</span>
+              </div>
+              <button class="add-category-btn" id="addCBtn" title="Add Category">
+                <img src="images/addIcon.png" alt="Search" class="addIcon"/>Add New Category
+              </button>
+            </div>
+            <div class="category-scroll-area">
+              <div class="goals-deadlines">Travel</div>
+              <div class="goals-deadlines">Education</div>
+              <div class="goals-deadlines">Bills</div>
+                <!-- Add more entries here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>    
+  </div>
+
+    <div id="addCmodal" class="addC-modal">
+      <div class="addC-content">
+          <h2 class="addC-title"><span class="add">Add New</span> <span class="newGoal">Category</span></h2>
+        <form>
+          <label for="categoryName" class="categoryName">Category Name:</label>
+          <input type="text" id="categoryName" name="categoryName" required class="inputC">
+        </form>
+        <div class="addC-buttons">
+          <button id="confirmAddC" class="addCconfirm-btn">Add</button>
+          <button id="cancelAddC" class="addCcancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="logoutModal" class="logout-modal">
+    <div class="modal-content">
+      <h3>Are you sure you want to log out?</h3>
+      <div class="modal-buttons">
+        <button id="confirmLogout" class="confirm-btn">Yes</button>
+        <button id="cancelLogout" class="cancel-btn">No</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin_category.js"></script>
+  <script src="js/dateLinksLogout.js"></script>
+</body>
+</html>
